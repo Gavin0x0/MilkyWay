@@ -51,7 +51,7 @@ class HomeScreen extends React.Component {
         duration: 300,
         easing: Easing.in(),
       }).start();
-      Animated.spring(this.state.opacity, { toValue: 0.5 }).start();
+      Animated.spring(this.state.opacity, { toValue: 0.8 }).start();
 
       StatusBar.setBarStyle("light-content", true);
     }
@@ -99,8 +99,7 @@ const RootView = styled.View`
 const Container = styled.View`
   flex: 1;
   background-color: #1e1e1e;
-  border-top-left-radius: 10px;
-  border-top-right-radius: 10px;
+  border-radius: 10px;
   align-items: center;
   justify-content: center;
 `;

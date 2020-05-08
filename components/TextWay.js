@@ -3,7 +3,7 @@ import { StyleSheet, Text, View, Animated, Dimensions } from "react-native";
 import { connect } from "react-redux";
 
 function mapStateToProps(state) {
-  return { action: state.action, text: state.text };
+  return { action: state.action, text: state.text, fontSize: state.fontSize };
 }
 
 function mapDispatchToProps(dispatch) {
@@ -46,8 +46,8 @@ class TextWay extends React.Component {
             textAlign: "center",
             left: this.state.x,
             color: "#FFFFFF",
-            fontSize: 50,
-            fontWeight: "bold",
+            fontSize: this.props.fontSize,
+            fontWeight: "600",
           }}
         >
           {this.props.text}

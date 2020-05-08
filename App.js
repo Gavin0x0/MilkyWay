@@ -6,6 +6,8 @@ import HomeScreen from "./screens/HomeScreen";
 const initialState = {
   action: "",
   text: "App.js的Loding...",
+  fontSize: 200,
+  fontWeight: 500,
 };
 
 const reducer = (state = initialState, action) => {
@@ -15,7 +17,11 @@ const reducer = (state = initialState, action) => {
     case "CLOSE_MENU":
       return { action: "closeMenu" };
     case "UPDATE_TEXT":
-      return { text: action.text };
+      return {
+        text: action.text,
+        fontSize: action.fontSize,
+        fontWeight: action.fontWeight,
+      };
     default:
       return state;
   }
