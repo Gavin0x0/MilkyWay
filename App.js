@@ -1,22 +1,32 @@
 import React from "react";
-import { StyleSheet, Text, View } from "react-native";
-import TextWay from "./components/TextWay";
+import { createStore } from "redux";
+import { Provider } from "react-redux";
+import HomeScreen from "./screens/HomeScreen";
 
-export default class App extends React.Component {
-  render() {
-    return (
-      <View style={styles.container}>
-        <TextWay />
-      </View>
-    );
+const initialState = {
+  action: "",
+  text: "Loding...",
+};
+
+const reducer = (state = initialState, action) => {
+  switch (action.type) {
+    case "OPEN_MENU":
+      return { action: "openMenu" };
+    case "CLOSE_MENU":
+      return { action: "closeMenu" };
+    case "UPDATE_NAME":
+      return { text: action.text };
+    default:
+      return state;
   }
-}
+};
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-});
+const store = createStore(reducer);
+
+const App = () => (
+  <Provider store={store}>
+    <HomeScreen />
+  </Provider>
+);
+
+export default App;
