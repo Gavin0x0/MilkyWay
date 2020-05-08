@@ -15,7 +15,7 @@ import TextWay from "../components/TextWay";
 const screenHeight = Dimensions.get("screen").height;
 
 function mapStateToProps(state) {
-  return { action: state.action, name: state.name };
+  return { action: state.action, text: state.text };
 }
 
 function mapDispatchToProps(dispatch) {
@@ -31,7 +31,7 @@ class HomeScreen extends React.Component {
   state = {
     scale: new Animated.Value(1),
     opacity: new Animated.Value(1),
-    text: "Loding",
+    text: "HomeScreen的state中设置Loding",
   };
 
   componentDidMount() {
@@ -76,6 +76,7 @@ class HomeScreen extends React.Component {
           }}
         >
           <TextWay />
+
           <TouchableOpacity
             onPress={this.props.openMenu}
             style={{ position: "absolute", top: screenHeight - 64 }}

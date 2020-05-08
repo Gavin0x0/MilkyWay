@@ -5,7 +5,7 @@ import HomeScreen from "./screens/HomeScreen";
 
 const initialState = {
   action: "",
-  text: "Loding...",
+  text: "App.js的Loding...",
 };
 
 const reducer = (state = initialState, action) => {
@@ -14,7 +14,7 @@ const reducer = (state = initialState, action) => {
       return { action: "openMenu" };
     case "CLOSE_MENU":
       return { action: "closeMenu" };
-    case "UPDATE_NAME":
+    case "UPDATE_TEXT":
       return { text: action.text };
     default:
       return state;

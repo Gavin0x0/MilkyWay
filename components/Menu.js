@@ -1,6 +1,11 @@
 import React from "react";
 import styled from "styled-components";
-import { Animated, TouchableOpacity, Dimensions } from "react-native";
+import {
+  Animated,
+  TouchableOpacity,
+  Dimensions,
+  TextInput,
+} from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { connect } from "react-redux";
 
@@ -10,10 +15,17 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    closeMenu: () =>
+    closeMenu: () => {
       dispatch({
         type: "CLOSE_MENU",
-      }),
+      });
+    },
+    updateText: (text) => {
+      dispatch({
+        type: "UPDATE_TEXT",
+        text: text,
+      });
+    },
   };
 }
 
@@ -28,9 +40,6 @@ class Menu extends React.Component {
 
   componentDidMount() {
     this.toggleMenu();
-    this.setState({
-      text: this.props.text,
-    });
   }
 
   componentDidUpdate() {
@@ -51,7 +60,14 @@ class Menu extends React.Component {
         toValue: -screenHeight - 44,
         duration: 500,
       }).start();
+      this.props.updateText(this.state.text);
     }
+  };
+
+  textChange = (text) => {
+    this.setState({
+      text: text,
+    });
   };
 
   render() {
@@ -59,7 +75,7 @@ class Menu extends React.Component {
       <AnimatedContainer style={{ top: this.state.top }}>
         <Cover>
           <Title>Setting</Title>
-          <Subtitle>Designer at design & code</Subtitle>
+          <Subtitle>Designer & 😺</Subtitle>
         </Cover>
 
         <AnimatedCloseView
@@ -81,7 +97,12 @@ class Menu extends React.Component {
           </TouchableOpacity>
         </AnimatedCloseView>
 
-        <Content></Content>
+        <Content>
+          <TextInput
+            placeholder='Type here to translate!'
+            onChangeText={(text) => this.textChange(text)}
+          />
+        </Content>
       </AnimatedContainer>
     );
   }
@@ -118,7 +139,7 @@ const Subtitle = styled.Text`
   margin-top: 8px;
 `;
 const Content = styled.View`
-  height: ${screenHeight};
+  height: ${screenHeight - 142};
   background: #f0f3f5;
   padding: 50px;
 `;
@@ -131,5 +152,8 @@ const CloseView = styled.View`
   align-items: center;
   justify-content: center;
 `;
+
+const TextIn = styled.TextInput``;
+
 const AnimatedCloseView = Animated.createAnimatedComponent(CloseView);
 const AnimatedContainer = Animated.createAnimatedComponent(Container);
