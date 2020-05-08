@@ -1,16 +1,26 @@
 import React from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View, Animated } from "react-native";
 import TextWay from "./components/TextWay";
 
 export default class App extends React.Component {
+  state = {
+    x: new Animated.Value(800),
+  };
+
+  componentDidMount() {
+    Animated.spring(this.state.x, { toValue: 0 }).start();
+  }
+
   render() {
     return (
       <View style={styles.container}>
-        <TextWay />
+        <AnimatedText style={{ top: this.state.x }}>Milky Way</AnimatedText>
       </View>
     );
   }
 }
+
+const AnimatedText = Animated.createAnimatedComponent(Text);
 
 const styles = StyleSheet.create({
   container: {
