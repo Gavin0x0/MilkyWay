@@ -11,6 +11,7 @@ function mapStateToProps(state) {
     text: state.text,
     fontSize: state.fontSize,
     fontWeight: state.fontWeight,
+    textSpeed: state.textSpeed,
   };
 }
 //创建dispatch方法发布更新命令及传参
@@ -21,12 +22,13 @@ function mapDispatchToProps(dispatch) {
         type: "CLOSE_MENU",
       });
     },
-    updateText: (text, fontSize, fontWeight) => {
+    updateText: (text, fontSize, fontWeight, textSpeed) => {
       dispatch({
         type: "UPDATE_TEXT",
         text: text,
         fontSize: fontSize,
         fontWeight: fontWeight,
+        textSpeed: textSpeed,
       });
     },
   };
@@ -46,7 +48,8 @@ class Menu extends React.Component {
     opacity: new Animated.Value(1),
     //输入栏文本变量
     text: "Loding",
-    fontSize: 500,
+    textSpeed: 0.2,
+    fontSize: 50,
     fontWeight: "600",
   };
 
@@ -63,7 +66,8 @@ class Menu extends React.Component {
     this.props.updateText(
       this.state.text,
       this.state.fontSize,
-      this.state.fontWeight
+      this.state.fontWeight,
+      this.state.textSpeed
     );
   };
   //调整参数时触发渐隐
@@ -80,6 +84,27 @@ class Menu extends React.Component {
       Animated.timing(this.state.opacity, {
         toValue: 0.1,
         duration: 800,
+      }),
+      Animated.timing(this.state.opacity, {
+        toValue: 1,
+        duration: 500,
+      }),
+    ]).start();
+  };
+  //调整速度时触发渐隐
+  changingSpeed = (textSpeed) => {
+    this.setState({
+      textSpeed: textSpeed,
+    });
+    this.beginUpdateText();
+    Animated.sequence([
+      Animated.timing(this.state.opacity, {
+        toValue: 0.1,
+        duration: 0,
+      }),
+      Animated.timing(this.state.opacity, {
+        toValue: 0.1,
+        duration: 1500,
       }),
       Animated.timing(this.state.opacity, {
         toValue: 1,
@@ -161,10 +186,23 @@ class Menu extends React.Component {
             <FontSizeSlider
               minimumValue={5}
               maximumValue={500}
+              step={1}
               minimumTrackTintColor='#000000'
               maximumTrackTintColor='#FFFFFF'
               thumbTintColor='#1e1e1e'
               onValueChange={(fontSize) => this.changingText(fontSize)}
+            />
+          </MenuItem>
+          <MenuItem>
+            <MenuText>文本速度</MenuText>
+            <FontSizeSlider
+              minimumValue={0.05}
+              maximumValue={1}
+              step={0.05}
+              minimumTrackTintColor='#000000'
+              maximumTrackTintColor='#FFFFFF'
+              thumbTintColor='#1e1e1e'
+              onValueChange={(textSpeed) => this.changingSpeed(textSpeed)}
             />
           </MenuItem>
         </Content>

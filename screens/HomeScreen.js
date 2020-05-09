@@ -1,4 +1,5 @@
 import React from "react";
+import { SplashScreen } from "expo";
 import {
   StatusBar,
   TouchableOpacity,
@@ -39,6 +40,9 @@ class HomeScreen extends React.Component {
     this.setState({
       text: this.props.text,
     });
+    //使本地初始屏幕（在app.json中配置）保持可见，直到调用hide为止。
+    SplashScreen.preventAutoHide();
+    SplashScreen.hide();
   }
   componentDidUpdate() {
     this.toggleMenu();
