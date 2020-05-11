@@ -36,8 +36,10 @@ class HomeScreen extends React.Component {
   };
 
   componentDidMount() {
+    //状态栏深色
     StatusBar.setBarStyle("dark-content", true);
     this.setState({
+      //文本(暂时也没用)
       text: this.props.text,
     });
     //使本地初始屏幕（在app.json中配置）保持可见，直到调用hide为止。
@@ -45,9 +47,10 @@ class HomeScreen extends React.Component {
     SplashScreen.hide();
   }
   componentDidUpdate() {
+    //触发菜单(启动/关闭取决于接收到的action)
     this.toggleMenu();
   }
-
+  //菜单触发
   toggleMenu = () => {
     if (this.props.action == "openMenu") {
       Animated.timing(this.state.scale, {

@@ -1,6 +1,12 @@
 import React from "react";
 import styled from "styled-components";
-import { Animated, TouchableOpacity, Dimensions, View } from "react-native";
+import {
+  Animated,
+  TouchableOpacity,
+  Dimensions,
+  View,
+  PanResponder,
+} from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { connect } from "react-redux";
 
@@ -22,10 +28,15 @@ function mapDispatchToProps(dispatch) {
         type: "CLOSE_MENU",
       });
     },
-    updateText: (text, fontSize, fontWeight, textSpeed) => {
+    updateText: (text) => {
       dispatch({
         type: "UPDATE_TEXT",
         text: text,
+      });
+    },
+    updateFont: (fontSize, fontWeight, textSpeed) => {
+      dispatch({
+        type: "UPDATE_FONT",
         fontSize: fontSize,
         fontWeight: fontWeight,
         textSpeed: textSpeed,
@@ -40,6 +51,8 @@ const screenHeight = Dimensions.get("screen").height;
 class Menu extends React.Component {
   //创建组件内变量
   state = {
+    //菜单是否启动
+    isOpen: false,
     //菜单距顶端距离变量
     top: new Animated.Value(screenHeight),
     //飞机按钮距顶端距离变量
@@ -48,34 +61,123 @@ class Menu extends React.Component {
     opacity: new Animated.Value(1),
     //输入栏文本变量
     text: "Loding",
+    //文本速度
     textSpeed: 0.2,
+    //字体大小
     fontSize: 50,
+    //字体粗细
     fontWeight: "600",
   };
 
+  constructor(props) {
+    super(props);
+    //创建手势组件
+    this._panResponder = PanResponder.create({
+      onStartShouldSetPanResponder: (evt, gestureState) => true,
+      onPanResponderMove: this.onPanResponderMove,
+      onPanResponderRelease: this._handlePanResponderEnd,
+    });
+  }
   //初次渲染时调用
   componentDidMount() {
-    this.toggleMenu();
-  }
-  //每次props/state更新时调用
-  componentDidUpdate() {
-    this.toggleMenu();
+    //触发菜单(启动/关闭取决于app.js中的初始action状态)
+    //this.toggleMenu();
+    console.log("Menu初次渲染");
   }
 
-  beginUpdateText = () => {
-    this.props.updateText(
-      this.state.text,
+  //每次props/state更新时调用
+  componentDidUpdate() {
+    //触发菜单(启动/关闭取决于接收到的action)
+    //this.toggleMenu();
+    console.log("Menu重渲染");
+  }
+
+  //手势滑动反馈
+  onPanResponderMove = (evt, gestureState) => {
+    if (this.state.isOpen) {
+      //菜单下滑
+      if (gestureState.dy > 0) {
+        console.log("onPanResponderMove zyx dx", gestureState.dx);
+        console.log("onPanResponderMove zyx dy", gestureState.dy);
+        let height = gestureState.dy;
+        Animated.spring(this.state.top, {
+          toValue: 1.5 * height + 66,
+        }).start();
+      }
+    } else {
+      //菜单上滑
+      if (gestureState.dy < 0) {
+        console.log("onPanResponderMove zyx dx", gestureState.dx);
+        console.log("onPanResponderMove zyx dy", gestureState.dy);
+        let height = -gestureState.dy;
+        Animated.spring(this.state.top, {
+          toValue: screenHeight - 1.5 * height - 100,
+        }).start();
+      }
+    }
+  };
+  //手势释放反馈
+  _handlePanResponderEnd = (e, gestureState) => {
+    if (this.state.isOpen) {
+      if (gestureState.dy > 0) {
+        // 执行向下滑移动画
+        let height = gestureState.dy;
+        console.log("_handlePanResponderEnd zyx dx", gestureState.dx);
+        console.log("_handlePanResponderEnd zyx dy", gestureState.dy);
+        if (height > screenHeight / 6) {
+          this.setState({
+            isOpen: false,
+          });
+          height = screenHeight;
+        } else {
+          height = 66;
+        }
+        Animated.timing(this.state.top, {
+          toValue: height,
+          duration: 300,
+        }).start();
+      }
+    } else {
+      if (gestureState.dy < 0) {
+        // 执行向上移动画
+        let height = -gestureState.dy;
+        console.log("_handlePanResponderEnd zyx dx", gestureState.dx);
+        console.log("_handlePanResponderEnd zyx dy", gestureState.dy);
+        if (height > screenHeight / 6) {
+          this.setState({
+            isOpen: true,
+          });
+          height = 66;
+        } else {
+          height = screenHeight;
+        }
+        Animated.timing(this.state.top, {
+          toValue: height,
+          duration: 300,
+        }).start();
+      }
+    }
+  };
+  //将参数传入提交函数
+  beginUpdateFont = () => {
+    console.log("触发了一次提交");
+    this.props.updateFont(
       this.state.fontSize,
       this.state.fontWeight,
       this.state.textSpeed
     );
   };
-  //调整参数时触发渐隐
-  changingText = (fontSize) => {
+  //调整大小时触发渐隐,并提交
+  changingFont = (fontSize) => {
     this.setState({
       fontSize: fontSize,
     });
-    this.beginUpdateText();
+    //直接提交
+    this.props.updateFont(
+      fontSize,
+      this.state.fontWeight,
+      this.state.textSpeed
+    );
     Animated.sequence([
       Animated.timing(this.state.opacity, {
         toValue: 0.1,
@@ -91,12 +193,17 @@ class Menu extends React.Component {
       }),
     ]).start();
   };
-  //调整速度时触发渐隐
+  //调整速度时触发渐隐,并提交
   changingSpeed = (textSpeed) => {
     this.setState({
       textSpeed: textSpeed,
     });
-    this.beginUpdateText();
+    //直接提交
+    this.props.updateFont(
+      this.state.fontSize,
+      this.state.fontWeight,
+      textSpeed
+    );
     Animated.sequence([
       Animated.timing(this.state.opacity, {
         toValue: 0.1,
@@ -135,83 +242,90 @@ class Menu extends React.Component {
           duration: 0,
         }),
       ]).start();
-      this.beginUpdateText();
     }
   };
 
-  //文本输入栏输入时更新state
+  //文本输入栏输入时直接提交
   textChange = (text) => {
-    this.setState({
-      text: text,
-    });
+    this.props.updateText(text);
   };
 
   render() {
     return (
-      <AnimatedContainer
-        style={{ top: this.state.top, opacity: this.state.opacity }}
-      >
-        <Cover>
-          <Title>Setting</Title>
-          <Subtitle>Designer & 😺 & 🌙</Subtitle>
-        </Cover>
-
-        <AnimatedCloseView
-          style={{
-            position: "absolute",
-            top: this.state.fly,
-            left: "50%",
-            marginLeft: -22,
-            zIndex: 11,
-          }}
+      <TransparentContainer {...this._panResponder.panHandlers}>
+        <AnimatedContainer
+          style={{ top: this.state.top, opacity: this.state.opacity }}
         >
-          <TouchableOpacity onPress={this.props.closeMenu}>
-            <Ionicons
-              name='md-airplane'
-              size={30}
-              color='#1e1e1e'
-              position='absolute'
-            />
-          </TouchableOpacity>
-        </AnimatedCloseView>
+          <Cover>
+            <Title>Setting</Title>
+            <Title>{this.state.isOpen ? "开着" : "关着"}</Title>
+            <Subtitle>Designed by Levi & 🌙</Subtitle>
+          </Cover>
+          <AnimatedCloseView
+            style={{
+              position: "absolute",
+              top: this.state.fly,
+              left: "50%",
+              marginLeft: -22,
+              zIndex: 11,
+            }}
+          >
+            <TouchableOpacity onPress={this.props.closeMenu}>
+              <Ionicons
+                name='md-airplane'
+                size={30}
+                color='#1e1e1e'
+                position='absolute'
+              />
+            </TouchableOpacity>
+          </AnimatedCloseView>
 
-        <Content>
-          <TextToShot
-            placeholder='Type here to shot!'
-            onChangeText={(text) => this.textChange(text)}
-          />
-          <MenuItem>
-            <MenuText>字体大小</MenuText>
-
-            <FontSizeSlider
-              minimumValue={5}
-              maximumValue={500}
-              step={1}
-              minimumTrackTintColor='#000000'
-              maximumTrackTintColor='#FFFFFF'
-              thumbTintColor='#1e1e1e'
-              onValueChange={(fontSize) => this.changingText(fontSize)}
+          <Content>
+            <TextToShot
+              placeholder='Type here to shot!'
+              onChangeText={(text) => this.textChange(text)}
             />
-          </MenuItem>
-          <MenuItem>
-            <MenuText>文本速度</MenuText>
-            <FontSizeSlider
-              minimumValue={0.05}
-              maximumValue={1}
-              step={0.05}
-              minimumTrackTintColor='#000000'
-              maximumTrackTintColor='#FFFFFF'
-              thumbTintColor='#1e1e1e'
-              onValueChange={(textSpeed) => this.changingSpeed(textSpeed)}
-            />
-          </MenuItem>
-        </Content>
-      </AnimatedContainer>
+            <MenuItem>
+              <MenuText>字体大小</MenuText>
+              <FontSizeSlider
+                minimumValue={5}
+                maximumValue={500}
+                step={1}
+                minimumTrackTintColor='#000000'
+                maximumTrackTintColor='#FFFFFF'
+                thumbTintColor='#1e1e1e'
+                onValueChange={(fontSize) => this.changingFont(fontSize)}
+              />
+            </MenuItem>
+            <MenuItem>
+              <MenuText>文本速度</MenuText>
+              <FontSizeSlider
+                minimumValue={0.05}
+                maximumValue={1}
+                step={0.05}
+                minimumTrackTintColor='#000000'
+                maximumTrackTintColor='#FFFFFF'
+                thumbTintColor='#1e1e1e'
+                onValueChange={(textSpeed) => this.changingSpeed(textSpeed)}
+              />
+            </MenuItem>
+          </Content>
+        </AnimatedContainer>
+      </TransparentContainer>
     );
   }
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Menu);
+
+const TransparentContainer = styled.View`
+  z-index: 2;
+  position: absolute;
+  bottom: 0;
+  height: 100%;
+  width: 100%;
+  opacity: 1;
+`;
 
 const Container = styled.View`
   position: absolute;
@@ -220,7 +334,6 @@ const Container = styled.View`
   height: 100%;
   z-index: 10;
   border-radius: 10px;
-
   position: absolute;
 `;
 

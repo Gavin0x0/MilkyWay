@@ -27,7 +27,7 @@
     "packagerOpts": {
       "config": "./metro.config.js"
     },
-    "description": "手持弹幕最简demo",
+    "description": "跨屏弹幕最简demo",
     "githubUrl": "https://github.com/levi-oh/MilkyWay"
   }
 }
