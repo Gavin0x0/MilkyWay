@@ -29,6 +29,7 @@ class TextWay extends React.Component {
     text: "自身state中设置的Loding",
     width: 0,
     time: 3000,
+    reverse: -1,
   };
 
   //弹幕的布局发生改变时调用,每一帧都会调用,因为在不停渲染
@@ -47,16 +48,16 @@ class TextWay extends React.Component {
 
   //弹幕滚动动画
   startRoll() {
-    Animated.sequence([
-      Animated.timing(this.state.x, {
-        toValue: screenWidth / 2 + this.state.width / 2,
-        duration: this.state.time,
-      }),
-      Animated.timing(this.state.x, {
-        toValue: -screenWidth / 2 - this.state.width / 2,
-        duration: 0,
-      }),
-    ]).start(() => this.startRoll());
+    Animated.timing(this.state.x, {
+      toValue: (screenWidth / 2 + this.state.width / 2) * this.state.reverse,
+      duration: this.state.time,
+      easing: null,
+    }).start(() => {
+      this.state.x.setValue(
+        (-screenWidth / 2 - this.state.width / 2) * this.state.reverse
+      );
+      this.startRoll();
+    });
   }
 
   //初次渲染完毕弹幕开始滚动

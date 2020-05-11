@@ -23,11 +23,6 @@ function mapStateToProps(state) {
 //创建dispatch方法发布更新命令及传参
 function mapDispatchToProps(dispatch) {
   return {
-    closeMenu: () => {
-      dispatch({
-        type: "CLOSE_MENU",
-      });
-    },
     updateText: (text) => {
       dispatch({
         type: "UPDATE_TEXT",
@@ -59,6 +54,10 @@ class Menu extends React.Component {
     fly: new Animated.Value(120),
     //不透明度
     opacity: new Animated.Value(1),
+    //底部小箭头位移
+    bottomIconY: new Animated.Value(0),
+    //底部小箭头不透明度
+    bottomIconOpacity: new Animated.Value(0),
     //输入栏文本变量
     text: "Loding",
     //文本速度
@@ -74,6 +73,7 @@ class Menu extends React.Component {
     //创建手势组件
     this._panResponder = PanResponder.create({
       onStartShouldSetPanResponder: (evt, gestureState) => true,
+      onPanResponderGrant: this.onPanResponderGrant,
       onPanResponderMove: this.onPanResponderMove,
       onPanResponderRelease: this._handlePanResponderEnd,
     });
@@ -91,7 +91,44 @@ class Menu extends React.Component {
     //this.toggleMenu();
     console.log("Menu重渲染");
   }
-
+  //手势激活反馈
+  //使用native渲染,不影响性能
+  onPanResponderGrant = () => {
+    if (!this.state.isOpen) {
+      Animated.sequence([
+        Animated.timing(this.state.bottomIconOpacity, {
+          toValue: 1,
+          duration: 300,
+          useNativeDriver: true,
+        }),
+        Animated.timing(this.state.bottomIconY, {
+          toValue: -55,
+          duration: 300,
+          useNativeDriver: true,
+        }),
+        Animated.timing(this.state.bottomIconY, {
+          toValue: -15,
+          duration: 300,
+          useNativeDriver: true,
+        }),
+        Animated.timing(this.state.bottomIconY, {
+          toValue: -44,
+          duration: 300,
+          useNativeDriver: true,
+        }),
+        Animated.timing(this.state.bottomIconY, {
+          toValue: -12,
+          duration: 300,
+          useNativeDriver: true,
+        }),
+        Animated.timing(this.state.bottomIconOpacity, {
+          toValue: 0,
+          duration: 500,
+          useNativeDriver: true,
+        }),
+      ]).start();
+    }
+  };
   //手势滑动反馈
   onPanResponderMove = (evt, gestureState) => {
     if (this.state.isOpen) {
@@ -253,6 +290,14 @@ class Menu extends React.Component {
   render() {
     return (
       <TransparentContainer {...this._panResponder.panHandlers}>
+        <AnimatedIconContainer
+          style={{
+            opacity: this.state.bottomIconOpacity,
+            transform: [{ translateY: this.state.bottomIconY }],
+          }}
+        >
+          <Ionicons name='md-arrow-round-up' size={44} color='white' />
+        </AnimatedIconContainer>
         <AnimatedContainer
           style={{ top: this.state.top, opacity: this.state.opacity }}
         >
@@ -272,7 +317,7 @@ class Menu extends React.Component {
           >
             <TouchableOpacity onPress={this.props.closeMenu}>
               <Ionicons
-                name='md-airplane'
+                name='md-link'
                 size={30}
                 color='#1e1e1e'
                 position='absolute'
@@ -325,6 +370,7 @@ const TransparentContainer = styled.View`
   height: 100%;
   width: 100%;
   opacity: 1;
+  align-items: center;
 `;
 
 const Container = styled.View`
@@ -335,6 +381,10 @@ const Container = styled.View`
   z-index: 10;
   border-radius: 10px;
   position: absolute;
+`;
+const IconWrap = styled.View`
+  position: absolute;
+  bottom: 15px;
 `;
 
 const Cover = styled.View`
@@ -396,3 +446,4 @@ const FontSizeSlider = styled.Slider`
 
 const AnimatedCloseView = Animated.createAnimatedComponent(CloseView);
 const AnimatedContainer = Animated.createAnimatedComponent(Container);
+const AnimatedIconContainer = Animated.createAnimatedComponent(IconWrap);

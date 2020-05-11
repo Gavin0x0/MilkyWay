@@ -1,37 +1,21 @@
 import React from "react";
 import { SplashScreen } from "expo";
-import {
-  StatusBar,
-  TouchableOpacity,
-  Animated,
-  Easing,
-  Dimensions,
-} from "react-native";
+import { StatusBar, Dimensions } from "react-native";
 import styled from "styled-components";
-import { Ionicons } from "@expo/vector-icons";
 import Menu from "../components/Menu";
 import { connect } from "react-redux";
 import TextWay from "../components/TextWay";
 
-const screenHeight = Dimensions.get("screen").height;
-
 function mapStateToProps(state) {
-  return { action: state.action, text: state.text };
+  return { text: state.text };
 }
 
 function mapDispatchToProps(dispatch) {
-  return {
-    openMenu: () =>
-      dispatch({
-        type: "OPEN_MENU",
-      }),
-  };
+  return {};
 }
 
 class HomeScreen extends React.Component {
   state = {
-    scale: new Animated.Value(1),
-    opacity: new Animated.Value(1),
     text: "HomeScreen的state中设置Loding",
   };
 
@@ -46,51 +30,15 @@ class HomeScreen extends React.Component {
     SplashScreen.preventAutoHide();
     SplashScreen.hide();
   }
-  componentDidUpdate() {
-    //触发菜单(启动/关闭取决于接收到的action)
-    this.toggleMenu();
-  }
-  //菜单触发
-  toggleMenu = () => {
-    if (this.props.action == "openMenu") {
-      Animated.timing(this.state.scale, {
-        toValue: 0.9,
-        duration: 300,
-        easing: Easing.in(),
-      }).start();
-      Animated.spring(this.state.opacity, { toValue: 0.8 }).start();
+  componentDidUpdate() {}
 
-      StatusBar.setBarStyle("light-content", true);
-    }
-    if (this.props.action == "closeMenu") {
-      Animated.timing(this.state.scale, {
-        toValue: 1,
-        duration: 300,
-        easing: Easing.in(),
-      }).start();
-      Animated.spring(this.state.opacity, { toValue: 1 }).start();
-      StatusBar.setBarStyle("dark-content", true);
-    }
-  };
   render() {
     return (
       <RootView>
         <Menu />
-        <AnimatedContainer
-          style={{
-            transform: [{ scale: this.state.scale }],
-            opacity: this.state.opacity,
-          }}
-        >
+        <Container>
           <TextWay />
-
-          <TouchableOpacity
-            onPress={this.props.openMenu}
-            style={{ position: "absolute", top: screenHeight - 64 }}
-          >
-            <Ionicons name='md-arrow-dropup-circle' size={44} color='white' />
-          </TouchableOpacity>
-        </AnimatedContainer>
+        </Container>
       </RootView>
     );
   }
@@ -110,5 +58,3 @@ const Container = styled.View`
   align-items: center;
   justify-content: center;
 `;
-
-const AnimatedContainer = Animated.createAnimatedComponent(Container);
