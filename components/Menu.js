@@ -48,8 +48,8 @@ class Menu extends React.Component {
   state = {
     //菜单是否启动
     isOpen: false,
-    //菜单距顶端距离变量
-    top: new Animated.Value(screenHeight),
+    //菜单Y轴位移变量
+    MenuY: new Animated.Value(screenHeight),
     //飞机按钮距顶端距离变量
     fly: new Animated.Value(120),
     //不透明度
@@ -92,7 +92,7 @@ class Menu extends React.Component {
     console.log("Menu重渲染");
   }
   //手势激活反馈
-  //使用native渲染,不影响性能
+  //使用native渲染,不影响js线程
   onPanResponderGrant = () => {
     if (!this.state.isOpen) {
       Animated.sequence([
@@ -137,8 +137,9 @@ class Menu extends React.Component {
         console.log("onPanResponderMove zyx dx", gestureState.dx);
         console.log("onPanResponderMove zyx dy", gestureState.dy);
         let height = gestureState.dy;
-        Animated.spring(this.state.top, {
+        Animated.spring(this.state.MenuY, {
           toValue: 1.5 * height + 66,
+          useNativeDriver: true,
         }).start();
       }
     } else {
@@ -147,8 +148,9 @@ class Menu extends React.Component {
         console.log("onPanResponderMove zyx dx", gestureState.dx);
         console.log("onPanResponderMove zyx dy", gestureState.dy);
         let height = -gestureState.dy;
-        Animated.spring(this.state.top, {
-          toValue: screenHeight - 1.5 * height - 100,
+        Animated.spring(this.state.MenuY, {
+          toValue: height,
+          useNativeDriver: true,
         }).start();
       }
     }
@@ -169,9 +171,10 @@ class Menu extends React.Component {
         } else {
           height = 66;
         }
-        Animated.timing(this.state.top, {
+        Animated.timing(this.state.MenuY, {
           toValue: height,
           duration: 300,
+          useNativeDriver: true,
         }).start();
       }
     } else {
@@ -188,9 +191,10 @@ class Menu extends React.Component {
         } else {
           height = screenHeight;
         }
-        Animated.timing(this.state.top, {
+        Animated.timing(this.state.MenuY, {
           toValue: height,
           duration: 300,
+          useNativeDriver: true,
         }).start();
       }
     }
@@ -219,14 +223,17 @@ class Menu extends React.Component {
       Animated.timing(this.state.opacity, {
         toValue: 0.1,
         duration: 0,
+        useNativeDriver: true,
       }),
       Animated.timing(this.state.opacity, {
         toValue: 0.1,
         duration: 800,
+        useNativeDriver: true,
       }),
       Animated.timing(this.state.opacity, {
         toValue: 1,
         duration: 500,
+        useNativeDriver: true,
       }),
     ]).start();
   };
@@ -245,41 +252,23 @@ class Menu extends React.Component {
       Animated.timing(this.state.opacity, {
         toValue: 0.1,
         duration: 0,
+        useNativeDriver: true,
       }),
       Animated.timing(this.state.opacity, {
         toValue: 0.1,
         duration: 1500,
+        useNativeDriver: true,
       }),
       Animated.timing(this.state.opacity, {
         toValue: 1,
         duration: 500,
+        useNativeDriver: true,
       }),
     ]).start();
   };
   //触发菜单
   toggleMenu = () => {
-    if (this.props.action == "openMenu") {
-      //打开菜单: 菜单上滑,飞机飞上来
-      Animated.spring(this.state.top, { toValue: 66 }).start();
-      Animated.timing(this.state.fly, {
-        toValue: 120,
-        duration: 600,
-      }).start();
-    }
-    if (this.props.action == "closeMenu") {
-      //关闭菜单:菜单下沉,飞机飞走,更新文本到redux
-      Animated.spring(this.state.top, { toValue: screenHeight }).start();
-      Animated.sequence([
-        Animated.timing(this.state.fly, {
-          toValue: -screenHeight - 44,
-          duration: 500,
-        }),
-        Animated.timing(this.state.fly, {
-          toValue: screenHeight,
-          duration: 0,
-        }),
-      ]).start();
-    }
+    console.log("触发了一次toggleMenu");
   };
 
   //文本输入栏输入时直接提交
@@ -299,7 +288,11 @@ class Menu extends React.Component {
           <Ionicons name='md-arrow-round-up' size={44} color='white' />
         </AnimatedIconContainer>
         <AnimatedContainer
-          style={{ top: this.state.top, opacity: this.state.opacity }}
+          style={{
+            transform: [{ translateY: this.state.MenuY }],
+            top: 0,
+            opacity: this.state.opacity,
+          }}
         >
           <Cover>
             <Title>Setting</Title>
@@ -380,7 +373,6 @@ const Container = styled.View`
   height: 100%;
   z-index: 10;
   border-radius: 10px;
-  position: absolute;
 `;
 const IconWrap = styled.View`
   position: absolute;
