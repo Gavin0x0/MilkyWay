@@ -384,6 +384,7 @@ const Cover = styled.View`
 `;
 
 const Title = styled.Text`
+  font-family: "Ali-Bold";
   font-size: 24px;
   font-weight: 600;
   color: white;
