@@ -4,11 +4,11 @@ import {
   Animated,
   TouchableOpacity,
   Dimensions,
-  View,
   PanResponder,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { connect } from "react-redux";
+import ExampleControlledTriangle from "../components/ColorPicker";
 
 //获取redux中的数据作为Props
 function mapStateToProps(state) {
@@ -18,6 +18,7 @@ function mapStateToProps(state) {
     fontSize: state.fontSize,
     fontWeight: state.fontWeight,
     textSpeed: state.textSpeed,
+    isPickerOpen: state.isPickerOpen,
   };
 }
 //创建dispatch方法发布更新命令及传参
@@ -29,7 +30,7 @@ function mapDispatchToProps(dispatch) {
         text: text,
       });
     },
-    updateFont: (fontSize, fontWeight, textSpeed) => {
+    updateFont: (fontSize, fontWeight) => {
       dispatch({
         type: "UPDATE_FONT",
         fontSize: fontSize,
@@ -40,6 +41,11 @@ function mapDispatchToProps(dispatch) {
       dispatch({
         type: "UPDATE_SPEED",
         textSpeed: textSpeed,
+      });
+    },
+    closePicker: () => {
+      dispatch({
+        type: "CLOSE_PICKER",
       });
     },
   };
@@ -71,6 +77,10 @@ class Menu extends React.Component {
     fontSize: 50,
     //字体粗细
     fontWeight: "600",
+    //字体颜色
+    color: "green",
+    //色轮选择器容器高度
+    ColorPickerContainerHeight: new Animated.Value(40),
   };
 
   constructor(props) {
@@ -95,6 +105,11 @@ class Menu extends React.Component {
     //触发菜单(启动/关闭取决于接收到的action)
     //this.toggleMenu();
     console.log("Menu重渲染");
+    if (this.props.isPickerOpen) {
+      this._openColorPicker();
+    } else {
+      this._closeColorPicker();
+    }
   }
   //手势激活反馈
   //使用native渲染,不影响js线程
@@ -195,6 +210,8 @@ class Menu extends React.Component {
           this.setState({
             isOpen: true,
           });
+          //关闭颜色拾取器
+          this.props.closePicker();
         } else {
           Animated.timing(this.state.MenuY, {
             toValue: screenHeight,
@@ -273,6 +290,22 @@ class Menu extends React.Component {
     this.props.updateText(text);
   };
 
+  _openColorPicker = () => {
+    Animated.spring(this.state.ColorPickerContainerHeight, {
+      toValue: 240,
+    }).start();
+  };
+  _closeColorPicker = () => {
+    Animated.spring(this.state.ColorPickerContainerHeight, {
+      toValue: 40,
+    }).start();
+  };
+  //调色盘
+  onColorChange(color) {
+    console.log("改变了颜色");
+    this.setState({ color: color });
+  }
+
   render() {
     return (
       <TransparentContainer {...this._panResponder.panHandlers}>
@@ -318,6 +351,7 @@ class Menu extends React.Component {
           <Content>
             <TextToShot
               placeholder='Type here to shot!'
+              placeholderTextColor='white'
               onChangeText={(text) => this.textChange(text)}
             />
             <MenuItem>
@@ -344,6 +378,13 @@ class Menu extends React.Component {
                 onValueChange={(textSpeed) => this.changingSpeed(textSpeed)}
               />
             </MenuItem>
+            <AnimatedColorPickerContainer
+              style={{ height: this.state.ColorPickerContainerHeight }}
+            >
+              <MenuText>文本颜色</MenuText>
+
+              <ExampleControlledTriangle></ExampleControlledTriangle>
+            </AnimatedColorPickerContainer>
           </Content>
         </AnimatedContainer>
       </TransparentContainer>
@@ -394,10 +435,11 @@ const Subtitle = styled.Text`
   color: rgba(255, 255, 255, 0.5);
   margin-top: 8px;
 `;
+
 const Content = styled.View`
-  height: ${screenHeight - 142};
+  height: ${screenHeight - 142}px;
   background: #f0f3f5;
-  padding: 40px;
+  padding: 10%;
 `;
 
 const CloseView = styled.View`
@@ -415,13 +457,15 @@ const TextToShot = styled.TextInput`
   padding: 20px;
   color: white;
 `;
+
+//文字调整选项栏
 const MenuItem = styled.View`
   flex-direction: row;
   margin-top: 30px;
   width: 100%;
   height: 40px;
   align-items: center;
-  justify-content: space-around;
+  justify-content: space-between;
 `;
 
 const MenuText = styled.Text`
@@ -434,6 +478,18 @@ const FontSizeSlider = styled.Slider`
   width: 80%;
 `;
 
+//色轮选择器容器
+const ColorPickerContainer = styled.View`
+  flex-direction: row;
+  margin-top: 30px;
+  align-items: center;
+  width: 100%;
+  justify-content: space-between;
+`;
+
+const AnimatedColorPickerContainer = Animated.createAnimatedComponent(
+  ColorPickerContainer
+);
 const AnimatedCloseView = Animated.createAnimatedComponent(CloseView);
 const AnimatedContainer = Animated.createAnimatedComponent(Container);
 const AnimatedIconContainer = Animated.createAnimatedComponent(IconWrap);

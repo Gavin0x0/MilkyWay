@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { View, Animated, Dimensions, Text, Button } from "react-native";
 import { connect } from "react-redux";
 import { EasyLoading, Loading } from "../components/LoadFinish";
+import { fromHsv } from "react-native-color-picker";
 
 //接收redux传来的参数
 function mapStateToProps(state) {
@@ -13,6 +14,7 @@ function mapStateToProps(state) {
     fontWeight: state.fontWeight,
     textSpeed: state.textSpeed,
     durationTime: state.durationTime,
+    textColor: state.textColor,
   };
 }
 
@@ -34,7 +36,7 @@ const screenHeight = Math.round(Dimensions.get("screen").height);
 
 class TextWay extends React.Component {
   state = {
-    x: new Animated.Value(-screenWidth / 2),
+    x: new Animated.Value(50),
     text: "自身state中设置的Loding",
     width: 0,
     reverse: -1,
@@ -92,6 +94,7 @@ class TextWay extends React.Component {
               fontSize: this.props.fontSize,
               fontWeight: this.props.fontWeight,
               fontFamily: "Ali-Bold",
+              color: fromHsv(this.props.textColor),
             }}
           >
             {this.props.text}

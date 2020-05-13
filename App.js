@@ -3,6 +3,7 @@ import { createStore } from "redux";
 import { Provider } from "react-redux";
 import { Dimensions, DeviceInfo } from "react-native";
 import HomeScreen from "./screens/HomeScreen";
+import { toHsv } from "react-native-color-picker";
 
 //获取屏幕宽高
 const screenWidth = Math.round(Dimensions.get("screen").width);
@@ -16,6 +17,8 @@ const initialState = {
   textWidth: 900,
   textSpeed: 0.2,
   durationTime: 2000,
+  isPickerOpen: false,
+  textColor: toHsv("white"),
 };
 //状态包装器,把状态打包
 const reducer = (state = initialState, action) => {
@@ -42,6 +45,21 @@ const reducer = (state = initialState, action) => {
         ...state,
         textWidth: action.textWidth,
         durationTime: (screenWidth + action.textWidth) / state.textSpeed,
+      };
+    case "OPEN_PICKER":
+      return {
+        ...state,
+        isPickerOpen: true,
+      };
+    case "CLOSE_PICKER":
+      return {
+        ...state,
+        isPickerOpen: false,
+      };
+    case "UPDATE_COLOR":
+      return {
+        ...state,
+        textColor: action.textColor,
       };
     default:
       return state;
