@@ -1,18 +1,18 @@
 import React from "react";
 import { createStore } from "redux";
 import { Provider } from "react-redux";
-import { Dimensions } from "react-native";
+import { Dimensions, DeviceInfo } from "react-native";
 import HomeScreen from "./screens/HomeScreen";
 
 //获取屏幕宽高
-const screenWidth = Dimensions.get("screen").width;
-const screenHeight = Dimensions.get("screen").height;
+const screenWidth = Math.round(Dimensions.get("screen").width);
+const screenHeight = Math.round(Dimensions.get("screen").height);
 
 //redux中初始状态值
 const initialState = {
   text: "Milky Way",
   fontSize: 80,
-  fontWeight: "bold",
+  fontWeight: "200",
   textWidth: 900,
   textSpeed: 0.2,
   durationTime: 2000,

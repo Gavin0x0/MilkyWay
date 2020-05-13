@@ -1,7 +1,12 @@
 import React from "react";
 import styled from "styled-components";
-import { View, Animated, Dimensions } from "react-native";
+import { View, Animated, Dimensions, Text } from "react-native";
+import * as Font from "expo-font";
 import { connect } from "react-redux";
+
+let customFonts = {
+  "Ali-Bold": require("../assets/fonts/Alibaba-PuHuiTi-Bold.ttf"),
+};
 
 //接收redux传来的参数
 function mapStateToProps(state) {
@@ -28,11 +33,12 @@ function mapDispatchToProps(dispatch) {
 }
 
 //获取屏幕宽高
-const screenWidth = Dimensions.get("screen").width;
-const screenHeight = Dimensions.get("screen").height;
+const screenWidth = Math.round(Dimensions.get("screen").width);
+const screenHeight = Math.round(Dimensions.get("screen").height);
 
 class TextWay extends React.Component {
   state = {
+    fontsLoaded: false,
     x: new Animated.Value(-screenWidth / 2),
     text: "自身state中设置的Loding",
     width: 0,
@@ -63,39 +69,50 @@ class TextWay extends React.Component {
       this.startRoll();
     });
   }
+  //异步字体加载
+  async _loadFontsAsync() {
+    await Font.loadAsync(customFonts);
+    this.setState({ fontsLoaded: true });
+  }
 
   //初次渲染完毕弹幕开始滚动
   componentDidMount() {
+    this._loadFontsAsync();
     this.startRoll();
   }
 
   componentDidUpdate() {}
 
   render() {
-    return (
-      <Container>
-        <TextWrap>
-          <AnimatedText
-            onLayout={({ nativeEvent: e }) => this.layout(e)}
-            style={{
-              transform: [{ translateX: this.state.x }],
-              fontSize: this.props.fontSize,
-              fontWeight: this.props.fontWeight,
-            }}
-          >
-            {this.props.text}
-          </AnimatedText>
-        </TextWrap>
-        <View style={{ top: 100 }}>
-          <DebugText>动作:{this.props.action}</DebugText>
-          <DebugText>文字大小:{this.props.fontSize}</DebugText>
-          <DebugText>文字粗细:{this.props.fontWeight}</DebugText>
-          <DebugText>文本速度:{this.props.textSpeed}</DebugText>
-          <DebugText>文本宽度:{this.state.width}</DebugText>
-          <DebugText>所需时间:{this.props.durationTime}</DebugText>
-        </View>
-      </Container>
-    );
+    if (this.state.fontsLoaded) {
+      return (
+        <Container>
+          <TextWrap>
+            <AnimatedText
+              onLayout={({ nativeEvent: e }) => this.layout(e)}
+              style={{
+                transform: [{ translateX: this.state.x }],
+                fontSize: this.props.fontSize,
+                fontWeight: this.props.fontWeight,
+                fontFamily: "Ali-Bold",
+              }}
+            >
+              {this.props.text}
+            </AnimatedText>
+          </TextWrap>
+          <View style={{ top: 100 }}>
+            <DebugText>动作:{this.props.action}</DebugText>
+            <DebugText>文字大小:{this.props.fontSize}</DebugText>
+            <DebugText>文字粗细:{this.props.fontWeight}</DebugText>
+            <DebugText>文本速度:{this.props.textSpeed}</DebugText>
+            <DebugText>文本宽度:{this.state.width}</DebugText>
+            <DebugText>所需时间:{this.props.durationTime}</DebugText>
+          </View>
+        </Container>
+      );
+    } else {
+      return <Text>AppLoading</Text>;
+    }
   }
 }
 

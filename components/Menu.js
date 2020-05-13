@@ -46,7 +46,7 @@ function mapDispatchToProps(dispatch) {
 }
 
 //获取屏幕高度
-const screenHeight = Dimensions.get("screen").height;
+const screenHeight = Math.round(Dimensions.get("screen").height);
 
 class Menu extends React.Component {
   //创建组件内变量
