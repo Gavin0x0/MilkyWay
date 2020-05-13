@@ -293,7 +293,7 @@ class Menu extends React.Component {
         >
           <Cover>
             <Title>Setting</Title>
-            <Title>{this.state.isOpen ? "开着" : "关着"}</Title>
+
             <Subtitle>Designed by Levi & 🌙</Subtitle>
           </Cover>
           <AnimatedCloseView

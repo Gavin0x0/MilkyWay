@@ -1,8 +1,8 @@
 import React from "react";
 import styled from "styled-components";
-import { View, Animated, Dimensions, Text } from "react-native";
+import { View, Animated, Dimensions, Text, Button } from "react-native";
 import { connect } from "react-redux";
-import AppLoading from "./AppLoding";
+import { EasyLoading, Loading } from "../components/LoadFinish";
 
 //接收redux传来的参数
 function mapStateToProps(state) {
@@ -40,6 +40,13 @@ class TextWay extends React.Component {
     reverse: -1,
   };
 
+  _showLoadFinish() {
+    //EasyLoading.show();//显示
+    //EasyLoading.dimiss();//关闭
+    //自定义超时时间
+    EasyLoading.show(3000);
+  }
+
   //弹幕的布局发生改变时调用,每一帧都会调用,因为在不停渲染
   //提交文本宽度
   layout = (e) => {
@@ -68,6 +75,7 @@ class TextWay extends React.Component {
   //初次渲染完毕弹幕开始滚动
   componentDidMount() {
     this.startRoll();
+    this._showLoadFinish();
   }
 
   componentDidUpdate() {}
@@ -75,6 +83,7 @@ class TextWay extends React.Component {
   render() {
     return (
       <Container>
+        <Loading />
         <TextWrap>
           <AnimatedText
             onLayout={({ nativeEvent: e }) => this.layout(e)}

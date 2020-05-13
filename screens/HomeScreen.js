@@ -5,7 +5,7 @@ import styled from "styled-components";
 import Menu from "../components/Menu";
 import { connect } from "react-redux";
 import TextWay from "../components/TextWay";
-import AppLoding from "../components/AppLoding";
+import AppLoading from "../components/AppLoading";
 import * as Font from "expo-font";
 
 //加载本地字体文件
@@ -53,7 +53,7 @@ class HomeScreen extends React.Component {
   componentDidUpdate() {}
 
   render() {
-    if (!this.state.fontsLoaded) {
+    if (this.state.fontsLoaded) {
       return (
         <RootView>
           <Menu />
@@ -63,7 +63,7 @@ class HomeScreen extends React.Component {
         </RootView>
       );
     } else {
-      return <AppLoding />;
+      return <AppLoading />;
     }
   }
 }
