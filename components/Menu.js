@@ -34,6 +34,11 @@ function mapDispatchToProps(dispatch) {
         type: "UPDATE_FONT",
         fontSize: fontSize,
         fontWeight: fontWeight,
+      });
+    },
+    updateSpeed: (textSpeed) => {
+      dispatch({
+        type: "UPDATE_SPEED",
         textSpeed: textSpeed,
       });
     },
@@ -134,23 +139,19 @@ class Menu extends React.Component {
     if (this.state.isOpen) {
       //菜单下滑
       if (gestureState.dy > 0) {
-        console.log("onPanResponderMove zyx dx", gestureState.dx);
-        console.log("onPanResponderMove zyx dy", gestureState.dy);
+        console.log("菜单下滑 ", gestureState.dy);
         let height = gestureState.dy;
         Animated.spring(this.state.MenuY, {
-          toValue: 1.5 * height + 66,
-          useNativeDriver: true,
+          toValue: 66 + height,
         }).start();
       }
     } else {
       //菜单上滑
       if (gestureState.dy < 0) {
-        console.log("onPanResponderMove zyx dx", gestureState.dx);
-        console.log("onPanResponderMove zyx dy", gestureState.dy);
+        console.log("菜单上滑", gestureState.dy);
         let height = -gestureState.dy;
         Animated.spring(this.state.MenuY, {
-          toValue: height,
-          useNativeDriver: true,
+          toValue: screenHeight - 66 - height,
         }).start();
       }
     }
@@ -161,41 +162,45 @@ class Menu extends React.Component {
       if (gestureState.dy > 0) {
         // 执行向下滑移动画
         let height = gestureState.dy;
-        console.log("_handlePanResponderEnd zyx dx", gestureState.dx);
         console.log("_handlePanResponderEnd zyx dy", gestureState.dy);
         if (height > screenHeight / 6) {
+          console.log("执行了关闭");
+          Animated.timing(this.state.MenuY, {
+            toValue: screenHeight,
+            duration: 300,
+          }).start();
+          console.log("关闭了菜单");
           this.setState({
             isOpen: false,
           });
-          height = screenHeight;
         } else {
-          height = 66;
+          console.log("没执行关闭");
+          Animated.timing(this.state.MenuY, {
+            toValue: 66,
+            duration: 300,
+          }).start();
         }
-        Animated.timing(this.state.MenuY, {
-          toValue: height,
-          duration: 300,
-          useNativeDriver: true,
-        }).start();
       }
     } else {
       if (gestureState.dy < 0) {
         // 执行向上移动画
         let height = -gestureState.dy;
-        console.log("_handlePanResponderEnd zyx dx", gestureState.dx);
         console.log("_handlePanResponderEnd zyx dy", gestureState.dy);
         if (height > screenHeight / 6) {
+          Animated.timing(this.state.MenuY, {
+            toValue: 66,
+            duration: 300,
+          }).start();
+          console.log("打开了菜单");
           this.setState({
             isOpen: true,
           });
-          height = 66;
         } else {
-          height = screenHeight;
+          Animated.timing(this.state.MenuY, {
+            toValue: screenHeight,
+            duration: 300,
+          }).start();
         }
-        Animated.timing(this.state.MenuY, {
-          toValue: height,
-          duration: 300,
-          useNativeDriver: true,
-        }).start();
       }
     }
   };
@@ -214,26 +219,22 @@ class Menu extends React.Component {
       fontSize: fontSize,
     });
     //直接提交
-    this.props.updateFont(
-      fontSize,
-      this.state.fontWeight,
-      this.state.textSpeed
-    );
+    this.props.updateFont(fontSize, this.state.fontWeight);
     Animated.sequence([
       Animated.timing(this.state.opacity, {
         toValue: 0.1,
         duration: 0,
-        useNativeDriver: true,
+        //useNativeDriver: true,
       }),
       Animated.timing(this.state.opacity, {
         toValue: 0.1,
         duration: 800,
-        useNativeDriver: true,
+        //useNativeDriver: true,
       }),
       Animated.timing(this.state.opacity, {
         toValue: 1,
         duration: 500,
-        useNativeDriver: true,
+        //useNativeDriver: true,
       }),
     ]).start();
   };
@@ -243,26 +244,22 @@ class Menu extends React.Component {
       textSpeed: textSpeed,
     });
     //直接提交
-    this.props.updateFont(
-      this.state.fontSize,
-      this.state.fontWeight,
-      textSpeed
-    );
+    this.props.updateSpeed(textSpeed);
     Animated.sequence([
       Animated.timing(this.state.opacity, {
         toValue: 0.1,
         duration: 0,
-        useNativeDriver: true,
+        //useNativeDriver: true,
       }),
       Animated.timing(this.state.opacity, {
         toValue: 0.1,
         duration: 1500,
-        useNativeDriver: true,
+        //useNativeDriver: true,
       }),
       Animated.timing(this.state.opacity, {
         toValue: 1,
         duration: 500,
-        useNativeDriver: true,
+        //useNativeDriver: true,
       }),
     ]).start();
   };
