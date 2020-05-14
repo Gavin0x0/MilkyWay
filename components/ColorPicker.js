@@ -34,12 +34,12 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-class ExampleControlledTriangle extends React.Component {
+class ControlledTriangle extends React.Component {
   constructor(...args) {
     super(...args);
     this.state = {
       color: toHsv("white"),
-      oldColor: toHsv("black"),
+      oldColor: "#1e1e1e",
       isPickerOpen: false,
     };
     this.onColorChange = this.onColorChange.bind(this);
@@ -51,7 +51,7 @@ class ExampleControlledTriangle extends React.Component {
 
   //更新颜色并关闭颜色拾取器
   _updateColor(color) {
-    this.setState({ oldColor: color });
+    this.setState({ oldColor: fromHsv(color) });
     this.props.updateColor(color);
     this.props.closePicker();
   }
@@ -61,11 +61,23 @@ class ExampleControlledTriangle extends React.Component {
       return (
         <View>
           <TouchableOpacity onPress={() => this.props.openPicker()}>
-            <Ionicons
-              name='md-color-palette'
-              size={44}
-              color={fromHsv(this.props.textColor)}
-            />
+            <View
+              style={{
+                backgroundColor: "#1e1e1e",
+                height: 50,
+                width: 50,
+                borderRadius: 25,
+                alignItems: "center",
+                justifyContent: "center",
+                opacity: 0.8,
+              }}
+            >
+              <Ionicons
+                name='md-color-palette'
+                size={44}
+                color={fromHsv(this.props.textColor)}
+              />
+            </View>
           </TouchableOpacity>
         </View>
       );
@@ -73,7 +85,6 @@ class ExampleControlledTriangle extends React.Component {
     return (
       <View style={{}}>
         <TriangleColorPicker
-          oldColor='purple'
           color={this.state.color}
           oldColor={this.state.oldColor}
           onColorChange={this.onColorChange}
@@ -86,7 +97,4 @@ class ExampleControlledTriangle extends React.Component {
   }
 }
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(ExampleControlledTriangle);
+export default connect(mapStateToProps, mapDispatchToProps)(ControlledTriangle);

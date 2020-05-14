@@ -8,7 +8,8 @@ import {
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { connect } from "react-redux";
-import ExampleControlledTriangle from "../components/ColorPicker";
+import ControlledTriangle from "../components/ColorPicker";
+import { fromHsv } from "react-native-color-picker";
 
 //获取redux中的数据作为Props
 function mapStateToProps(state) {
@@ -19,6 +20,7 @@ function mapStateToProps(state) {
     fontWeight: state.fontWeight,
     textSpeed: state.textSpeed,
     isPickerOpen: state.isPickerOpen,
+    textColor: state.textColor,
   };
 }
 //创建dispatch方法发布更新命令及传参
@@ -350,12 +352,13 @@ class Menu extends React.Component {
 
           <Content>
             <TextToShot
-              placeholder='Type here to shot!'
-              placeholderTextColor='white'
+              style={{ color: fromHsv(this.props.textColor) }}
+              placeholder='Type here to launch ! 🚀'
+              placeholderTextColor={fromHsv(this.props.textColor)}
               onChangeText={(text) => this.textChange(text)}
             />
             <MenuItem>
-              <MenuText>字体大小</MenuText>
+              <MenuText>Size</MenuText>
               <FontSizeSlider
                 minimumValue={5}
                 maximumValue={500}
@@ -367,7 +370,7 @@ class Menu extends React.Component {
               />
             </MenuItem>
             <MenuItem>
-              <MenuText>文本速度</MenuText>
+              <MenuText>Speed</MenuText>
               <FontSizeSlider
                 minimumValue={0.05}
                 maximumValue={1}
@@ -381,9 +384,8 @@ class Menu extends React.Component {
             <AnimatedColorPickerContainer
               style={{ height: this.state.ColorPickerContainerHeight }}
             >
-              <MenuText>文本颜色</MenuText>
-
-              <ExampleControlledTriangle></ExampleControlledTriangle>
+              <MenuText>Color</MenuText>
+              <ControlledTriangle />
             </AnimatedColorPickerContainer>
           </Content>
         </AnimatedContainer>
