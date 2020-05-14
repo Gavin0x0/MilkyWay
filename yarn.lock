@@ -2364,10 +2364,10 @@ expo-asset-utils@^1.2.0:
   resolved "https://registry.npm.taobao.org/expo-asset-utils/download/expo-asset-utils-1.2.0.tgz#df52f8e8c836c343ad713a0044db79be69cfe64b"
   integrity sha1-31L46Mg2w0OtcToARNt5vmnP5ks=
 
-expo-asset@~8.1.4:
-  version "8.1.4"
-  resolved "https://registry.npm.taobao.org/expo-asset/download/expo-asset-8.1.4.tgz?cache=0&sync_timestamp=1585706752747&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fexpo-asset%2Fdownload%2Fexpo-asset-8.1.4.tgz#5265c28c1c279b2f9779269195bec4caf250ba5d"
-  integrity sha1-UmXCjBwnmy+XeSaRlb7EyvJQul0=
+expo-asset@~8.1.5:
+  version "8.1.5"
+  resolved "https://registry.npm.taobao.org/expo-asset/download/expo-asset-8.1.5.tgz#6d0e3504cd719e9b888d32978d419d6522eed799"
+  integrity sha1-bQ41BM1xnpuIjTKXjUGdZSLu15k=
   dependencies:
     blueimp-md5 "^2.10.0"
     invariant "^2.2.4"
@@ -2423,6 +2423,15 @@ expo-linear-gradient@~8.1.0:
   resolved "https://registry.npm.taobao.org/expo-linear-gradient/download/expo-linear-gradient-8.1.0.tgz#6933765cf1e76ef2928fd8495e779929699ac4c6"
   integrity sha1-aTN2XPHnbvKSj9hJXneZKWmaxMY=
 
+expo-linking@~1.0.0:
+  version "1.0.1"
+  resolved "https://registry.npm.taobao.org/expo-linking/download/expo-linking-1.0.1.tgz#2c1b6e68f8d5f4e54add5670290a4eacb263199d"
+  integrity sha1-LBtuaPjV9OVK3VZwKQpOrLJjGZ0=
+  dependencies:
+    expo-constants "~9.0.0"
+    qs "^6.5.0"
+    url-parse "^1.4.4"
+
 expo-location@~8.1.0:
   version "8.1.0"
   resolved "https://registry.npm.taobao.org/expo-location/download/expo-location-8.1.0.tgz#6a71ad9a8b78d5f016a30a02013c3b28f46d0b1b"
@@ -2453,17 +2462,17 @@ expo-three@^5.4.0:
     color-temperature "0.2.7"
     expo-asset-utils "^1.2.0"
 
-expo-web-browser@~8.2.0:
+expo-web-browser@~8.2.1:
   version "8.2.0"
   resolved "https://registry.npm.taobao.org/expo-web-browser/download/expo-web-browser-8.2.0.tgz#18f14fef54bb20e723760083689bc0aef130bb23"
   integrity sha1-GPFP71S7IOcjdgCDaJvArvEwuyM=
   dependencies:
     compare-urls "^2.0.0"
 
-expo@~37.0.3:
-  version "37.0.8"
-  resolved "https://registry.npm.taobao.org/expo/download/expo-37.0.8.tgz#83643f329d734e331a1c419ac9a85670628271bb"
-  integrity sha1-g2Q/Mp1zTjMaHEGayahWcGKCcbs=
+expo@~37.0.1:
+  version "37.0.10"
+  resolved "https://registry.npm.taobao.org/expo/download/expo-37.0.10.tgz#2aa3b2286a5ce0e40584298c61d807a347591c59"
+  integrity sha1-KqOyKGpc4OQFhCmMYdgHo0dZHFk=
   dependencies:
     "@babel/runtime" "^7.1.2"
     "@expo/vector-icons" "^10.0.2"
@@ -2476,17 +2485,18 @@ expo@~37.0.3:
     babel-preset-expo "~8.1.0"
     badgin "^1.1.2"
     cross-spawn "^6.0.5"
-    expo-asset "~8.1.4"
+    expo-asset "~8.1.5"
     expo-constants "~9.0.0"
     expo-error-recovery "~1.1.0"
     expo-file-system "~8.1.0"
     expo-font "~8.1.0"
     expo-keep-awake "~8.1.0"
     expo-linear-gradient "~8.1.0"
+    expo-linking "~1.0.0"
     expo-location "~8.1.0"
     expo-permissions "~8.1.0"
     expo-sqlite "~8.1.0"
-    expo-web-browser "~8.2.0"
+    expo-web-browser "~8.2.1"
     fbemitter "^2.1.1"
     invariant "^2.2.2"
     lodash "^4.6.0"
@@ -4471,9 +4481,10 @@ react-native-web@~0.11.7:
     prop-types "^15.6.0"
     react-timer-mixin "^0.13.4"
 
-"react-native@https://github.com/expo/react-native/archive/sdk-37.0.1.tar.gz":
+react-native@0.61.4:
   version "0.61.4"
-  resolved "https://github.com/expo/react-native/archive/sdk-37.0.1.tar.gz#69f3f63c36c9df52611847a67c9d94596c1754cc"
+  resolved "https://registry.npm.taobao.org/react-native/download/react-native-0.61.4.tgz?cache=0&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Freact-native%2Fdownload%2Freact-native-0.61.4.tgz#9ec6e8a2aa8eac57143dcfa39115c7d9a139bc2c"
+  integrity sha1-nsbooqqOrFcUPc+jkRXH2aE5vCw=
   dependencies:
     "@babel/runtime" "^7.0.0"
     "@react-native-community/cli" "^3.0.0-alpha.1"
