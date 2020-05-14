@@ -9,6 +9,7 @@ import { fromHsv } from "react-native-color-picker";
 function mapStateToProps(state) {
   return {
     textColor: state.textColor,
+    textDirection: state.textDirection,
   };
 }
 //创建dispatch方法发布更新命令及传参
@@ -17,6 +18,12 @@ function mapDispatchToProps(dispatch) {
     closePicker: () => {
       dispatch({
         type: "CLOSE_PICKER",
+      });
+    },
+    changeTextDirection: (textDirection) => {
+      dispatch({
+        type: "CHANGE_TEXTDIRECTION",
+        textDirection: textDirection,
       });
     },
   };
@@ -28,15 +35,33 @@ class DirectionButton extends React.Component {
     //文字方向
     direction: -1,
     //按钮方向
-    iconDirection: new Animated.Value(0),
+    iconDirection: new Animated.Value(1),
+  };
+
+  spin = () => {
+    if (this.props.textDirection > 0) {
+      this.spinToLeft();
+      this.props.changeTextDirection(-1);
+    } else {
+      this.spinToRight();
+      this.props.changeTextDirection(1);
+    }
   };
   //旋转至朝左方法
-  spin = () => {
+  spinToLeft = () => {
     Animated.timing(this.state.iconDirection, {
       toValue: 0.5, // 最终值 为1，这里表示最大旋转 360度
-      duration: 2000,
+      duration: 1500,
       easing: Easing.in(Easing.elastic(4)),
-    }).start(() => this.spin());
+    }).start();
+  };
+  //旋转至朝右方法
+  spinToRight = () => {
+    Animated.timing(this.state.iconDirection, {
+      toValue: 1, // 最终值 为1，这里表示最大旋转 360度
+      duration: 1500,
+      easing: Easing.in(Easing.elastic(4)),
+    }).start();
   };
 
   render() {

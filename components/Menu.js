@@ -390,10 +390,7 @@ class Menu extends React.Component {
                 onValueChange={(textSpeed) => this.changingSpeed(textSpeed)}
               />
             </MenuItem>
-            <MenuItem>
-              <MenuText>Direction</MenuText>
-              <DirectionButton />
-            </MenuItem>
+
             <AnimatedColorPickerContainer
               style={{
                 height: this.state.ColorPickerContainerHeight,
@@ -402,6 +399,10 @@ class Menu extends React.Component {
               <MenuText>Color</MenuText>
               <ControlledTriangle />
             </AnimatedColorPickerContainer>
+            <MenuItem>
+              <MenuText>Direction</MenuText>
+              <DirectionButton />
+            </MenuItem>
           </Content>
         </AnimatedContainer>
       </TransparentContainer>

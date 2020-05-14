@@ -15,6 +15,7 @@ function mapStateToProps(state) {
     textSpeed: state.textSpeed,
     durationTime: state.durationTime,
     textColor: state.textColor,
+    textDirection: state.textDirection,
   };
 }
 
@@ -39,7 +40,6 @@ class TextWay extends React.Component {
     x: new Animated.Value(50),
     text: "自身state中设置的Loding",
     width: 0,
-    reverse: -1,
   };
 
   _showLoadFinish() {
@@ -62,14 +62,15 @@ class TextWay extends React.Component {
   //弹幕滚动动画
   startRoll() {
     Animated.timing(this.state.x, {
-      toValue: (screenWidth / 2 + this.state.width / 2) * this.state.reverse,
+      toValue:
+        (screenWidth / 2 + this.state.width / 2) * this.props.textDirection,
       useNativeDriver: true,
       duration: this.props.durationTime,
       //线性运动
       easing: Easing.inOut(Easing.linear),
     }).start(() => {
       this.state.x.setValue(
-        (-screenWidth / 2 - this.state.width / 2) * this.state.reverse
+        (-screenWidth / 2 - this.state.width / 2) * this.props.textDirection
       );
       this.startRoll();
     });

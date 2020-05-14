@@ -19,6 +19,8 @@ const initialState = {
   durationTime: 2000,
   isPickerOpen: false,
   textColor: toHsv("white"),
+  //文字方向,向右为正
+  textDirection: 1,
 };
 //状态包装器,把状态打包
 const reducer = (state = initialState, action) => {
@@ -60,6 +62,11 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         textColor: action.textColor,
+      };
+    case "CHANGE_TEXTDIRECTION":
+      return {
+        ...state,
+        textDirection: action.textDirection,
       };
     default:
       return state;
