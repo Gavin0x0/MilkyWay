@@ -5,10 +5,12 @@ import {
   TouchableOpacity,
   Dimensions,
   PanResponder,
+  Easing,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { connect } from "react-redux";
 import ControlledTriangle from "../components/ColorPicker";
+import DirectionButton from "../components/DirectionButton";
 import { fromHsv } from "react-native-color-picker";
 
 //获取redux中的数据作为Props
@@ -185,6 +187,7 @@ class Menu extends React.Component {
           Animated.timing(this.state.MenuY, {
             toValue: screenHeight,
             duration: 300,
+            easing: Easing.out(Easing.quad),
           }).start();
           console.log("关闭了菜单");
           this.setState({
@@ -207,6 +210,7 @@ class Menu extends React.Component {
           Animated.timing(this.state.MenuY, {
             toValue: 66,
             duration: 300,
+            easing: Easing.out(Easing.quad),
           }).start();
           console.log("打开了菜单");
           this.setState({
@@ -315,6 +319,7 @@ class Menu extends React.Component {
           style={{
             opacity: this.state.bottomIconOpacity,
             transform: [{ translateY: this.state.bottomIconY }],
+            elevation: 5,
           }}
         >
           <Ionicons name='md-arrow-round-up' size={44} color='white' />
@@ -381,8 +386,14 @@ class Menu extends React.Component {
                 onValueChange={(textSpeed) => this.changingSpeed(textSpeed)}
               />
             </MenuItem>
+            <MenuItem>
+              <MenuText>Direction</MenuText>
+              <DirectionButton />
+            </MenuItem>
             <AnimatedColorPickerContainer
-              style={{ height: this.state.ColorPickerContainerHeight }}
+              style={{
+                height: this.state.ColorPickerContainerHeight,
+              }}
             >
               <MenuText>Color</MenuText>
               <ControlledTriangle />
@@ -454,6 +465,7 @@ const CloseView = styled.View`
 `;
 
 const TextToShot = styled.TextInput`
+  height: 60px;
   border-radius: 30px;
   background: #1e1e1e;
   padding: 20px;

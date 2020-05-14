@@ -1,6 +1,7 @@
 import React from "react";
 import { View, Text, Button, TouchableOpacity } from "react-native";
 import { TriangleColorPicker, toHsv, fromHsv } from "react-native-color-picker";
+
 import { connect } from "react-redux";
 import { Ionicons } from "@expo/vector-icons";
 
@@ -74,8 +75,9 @@ class ControlledTriangle extends React.Component {
             >
               <Ionicons
                 name='md-color-palette'
-                size={44}
+                size={40}
                 color={fromHsv(this.props.textColor)}
+                style={{ height: 40 }}
               />
             </View>
           </TouchableOpacity>
@@ -83,7 +85,7 @@ class ControlledTriangle extends React.Component {
       );
     }
     return (
-      <View style={{}}>
+      <View>
         <TriangleColorPicker
           color={this.state.color}
           oldColor={this.state.oldColor}

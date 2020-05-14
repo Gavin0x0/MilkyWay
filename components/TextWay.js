@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import { View, Animated, Dimensions, Text, Button } from "react-native";
+import { View, Animated, Dimensions, Text, Button, Easing } from "react-native";
 import { connect } from "react-redux";
 import { EasyLoading, Loading } from "../components/LoadFinish";
 import { fromHsv } from "react-native-color-picker";
@@ -65,7 +65,8 @@ class TextWay extends React.Component {
       toValue: (screenWidth / 2 + this.state.width / 2) * this.state.reverse,
       useNativeDriver: true,
       duration: this.props.durationTime,
-      easing: null,
+      //线性运动
+      easing: Easing.inOut(Easing.linear),
     }).start(() => {
       this.state.x.setValue(
         (-screenWidth / 2 - this.state.width / 2) * this.state.reverse
