@@ -1,7 +1,6 @@
 import React from "react";
 import { View, Text, Button, TouchableOpacity } from "react-native";
 import { TriangleColorPicker, toHsv, fromHsv } from "react-native-color-picker";
-
 import { connect } from "react-redux";
 import { Ionicons } from "@expo/vector-icons";
 
@@ -48,6 +47,10 @@ class ControlledTriangle extends React.Component {
 
   onColorChange(color) {
     this.setState({ color });
+  }
+
+  colorChanged({ h, s, v }) {
+    console.log(h, s, v);
   }
 
   //更新颜色并关闭颜色拾取器

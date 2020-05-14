@@ -6,6 +6,7 @@ import {
   Dimensions,
   PanResponder,
   Easing,
+  Keyboard,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { connect } from "react-redux";
@@ -184,6 +185,8 @@ class Menu extends React.Component {
         console.log("_handlePanResponderEnd zyx dy", gestureState.dy);
         if (height > screenHeight / 6) {
           console.log("执行了关闭");
+          //关闭键盘
+          Keyboard.dismiss();
           Animated.timing(this.state.MenuY, {
             toValue: screenHeight,
             duration: 300,
@@ -361,6 +364,7 @@ class Menu extends React.Component {
               placeholder='Type here to launch ! 🚀'
               placeholderTextColor={fromHsv(this.props.textColor)}
               onChangeText={(text) => this.textChange(text)}
+              onEndEditing={Keyboard.dismiss}
             />
             <MenuItem>
               <MenuText>Size</MenuText>
