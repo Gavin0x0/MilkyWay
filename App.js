@@ -18,6 +18,7 @@ const initialState = {
   textSpeed: 0.2,
   durationTime: 2000,
   isPickerOpen: false,
+  isLinkMenuOpen: false,
   textColor: toHsv("white"),
   //文字方向,向右为正
   textDirection: 1,
@@ -57,6 +58,16 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         isPickerOpen: false,
+      };
+    case "OPEN_LINKMENU":
+      return {
+        ...state,
+        isLinkMenuOpen: true,
+      };
+    case "CLOSE_LINKMENU":
+      return {
+        ...state,
+        isLinkMenuOpen: false,
       };
     case "UPDATE_COLOR":
       return {

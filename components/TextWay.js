@@ -116,6 +116,7 @@ class TextWay extends React.Component {
           <DebugText>文字粗细:{this.props.fontWeight}</DebugText>
           <DebugText>文本速度:{this.props.textSpeed}</DebugText>
           <DebugText>文本宽度:{this.state.width}</DebugText>
+          <DebugText>屏幕宽度:{screenWidth}</DebugText>
           <DebugText>所需时间:{this.props.durationTime}</DebugText>
         </View>
       </Container>

@@ -13,6 +13,7 @@ import { connect } from "react-redux";
 import ControlledTriangle from "../components/ColorPicker";
 import DirectionButton from "../components/DirectionButton";
 import { fromHsv } from "react-native-color-picker";
+import LinkMenu from "./LinkMenu";
 
 //获取redux中的数据作为Props
 function mapStateToProps(state) {
@@ -23,6 +24,7 @@ function mapStateToProps(state) {
     fontWeight: state.fontWeight,
     textSpeed: state.textSpeed,
     isPickerOpen: state.isPickerOpen,
+    isLinkMenuOpen: state.isLinkMenuOpen,
     textColor: state.textColor,
   };
 }
@@ -53,11 +55,22 @@ function mapDispatchToProps(dispatch) {
         type: "CLOSE_PICKER",
       });
     },
+    openLnikMenu: () => {
+      dispatch({
+        type: "OPEN_LINKMENU",
+      });
+    },
+    closeLnikMenu: () => {
+      dispatch({
+        type: "CLOSE_LINKMENU",
+      });
+    },
   };
 }
 
 //获取屏幕高度
 const screenHeight = Math.round(Dimensions.get("screen").height);
+const screenWidth = Math.round(Dimensions.get("screen").width);
 
 class Menu extends React.Component {
   //创建组件内变量
@@ -86,6 +99,8 @@ class Menu extends React.Component {
     color: "green",
     //色轮选择器容器高度
     ColorPickerContainerHeight: new Animated.Value(40),
+    //连接菜单宽度
+    LinkMenuWidth: new Animated.Value(0),
   };
 
   constructor(props) {
@@ -93,6 +108,7 @@ class Menu extends React.Component {
     //创建手势组件
     this._panResponder = PanResponder.create({
       onStartShouldSetPanResponder: (evt, gestureState) => true,
+      onMoveShouldSetPanResponder: (evt, gestureState) => true,
       onPanResponderGrant: this.onPanResponderGrant,
       onPanResponderMove: this.onPanResponderMove,
       onPanResponderRelease: this._handlePanResponderEnd,
@@ -100,15 +116,11 @@ class Menu extends React.Component {
   }
   //初次渲染时调用
   componentDidMount() {
-    //触发菜单(启动/关闭取决于app.js中的初始action状态)
-    //this.toggleMenu();
     console.log("Menu初次渲染");
   }
 
   //每次props/state更新时调用
   componentDidUpdate() {
-    //触发菜单(启动/关闭取决于接收到的action)
-    //this.toggleMenu();
     console.log("Menu重渲染");
     if (this.props.isPickerOpen) {
       this._openColorPicker();
@@ -292,16 +304,12 @@ class Menu extends React.Component {
       }),
     ]).start();
   };
-  //触发菜单
-  toggleMenu = () => {
-    console.log("触发了一次toggleMenu");
-  };
 
   //文本输入栏输入时直接提交
   textChange = (text) => {
     this.props.updateText(text);
   };
-
+  //打开&关闭调色盘
   _openColorPicker = () => {
     Animated.spring(this.state.ColorPickerContainerHeight, {
       toValue: 240,
@@ -312,6 +320,32 @@ class Menu extends React.Component {
       toValue: 40,
     }).start();
   };
+
+  //切换连接菜单的状态
+  toggleLinkMenu = () => {
+    if (this.props.isLinkMenuOpen) {
+      console.log("关闭了菜单");
+      this.props.closeLnikMenu();
+      this._closeLinkMenu();
+    } else {
+      this.props.openLnikMenu();
+      this._openLinkMenu();
+    }
+  };
+  //打开&关闭连接菜单
+  _openLinkMenu = () => {
+    Animated.spring(this.state.LinkMenuWidth, {
+      toValue: screenWidth,
+    }).start();
+    console.log("打开了连接面板");
+  };
+  _closeLinkMenu = () => {
+    Animated.timing(this.state.LinkMenuWidth, {
+      toValue: 0,
+      duration: 1000,
+    }).start();
+  };
+
   //调色盘
   onColorChange(color) {
     console.log("改变了颜色");
@@ -342,73 +376,87 @@ class Menu extends React.Component {
 
             <Subtitle>Designed by Levi & 🌙</Subtitle>
           </Cover>
-          <AnimatedCloseView
+
+          <AnimatedIconView
             style={{
               position: "absolute",
               top: this.state.fly,
-              left: "50%",
-              marginLeft: -22,
-              zIndex: 11,
             }}
           >
-            <TouchableOpacity onPress={this.props.closeMenu}>
-              <Ionicons
-                name='md-link'
-                size={30}
-                color='#1e1e1e'
-                position='absolute'
-              />
-            </TouchableOpacity>
-          </AnimatedCloseView>
-
-          <Content>
-            <TextToShot
-              style={{ color: fromHsv(this.props.textColor) }}
-              placeholder='Type here to launch ! 🚀'
-              placeholderTextColor={fromHsv(this.props.textColor)}
-              onChangeText={(text) => this.textChange(text)}
-              onEndEditing={Keyboard.dismiss}
-            />
-            <MenuItem>
-              <MenuText>Size</MenuText>
-              <FontSizeSlider
-                value={50}
-                minimumValue={5}
-                maximumValue={500}
-                step={1}
-                minimumTrackTintColor='#000000'
-                maximumTrackTintColor='#FFFFFF'
-                thumbTintColor='#1e1e1e'
-                onValueChange={(fontSize) => this.changingFont(fontSize)}
-              />
-            </MenuItem>
-            <MenuItem>
-              <MenuText>Speed</MenuText>
-              <FontSizeSlider
-                value={0.2}
-                minimumValue={0.05}
-                maximumValue={1}
-                step={0.05}
-                minimumTrackTintColor='#000000'
-                maximumTrackTintColor='#FFFFFF'
-                thumbTintColor='#1e1e1e'
-                onValueChange={(textSpeed) => this.changingSpeed(textSpeed)}
-              />
-            </MenuItem>
-
-            <AnimatedColorPickerContainer
+            <TouchableOpacity
+              onPress={() => {
+                this.toggleLinkMenu();
+              }}
               style={{
-                height: this.state.ColorPickerContainerHeight,
+                alignItems: "center",
+                justifyContent: "center",
               }}
             >
-              <MenuText>Color</MenuText>
-              <ControlledTriangle />
-            </AnimatedColorPickerContainer>
-            <MenuItem>
-              <MenuText>Direction</MenuText>
-              <DirectionButton />
-            </MenuItem>
-          </Content>
+              <Ionicons
+                name='md-link'
+                size={32}
+                color='#1e1e1e'
+                position='absolute'
+                style={{
+                  height: 32,
+                }}
+              />
+            </TouchableOpacity>
+          </AnimatedIconView>
+          <TwoColumnContainer>
+            <AnimatedLinkMenu style={{ width: this.state.LinkMenuWidth }}>
+              <LinkMenu></LinkMenu>
+            </AnimatedLinkMenu>
+
+            <Content>
+              <TextToShot
+                style={{ color: fromHsv(this.props.textColor) }}
+                placeholder='Type here to launch ! 🚀'
+                placeholderTextColor={fromHsv(this.props.textColor)}
+                onChangeText={(text) => this.textChange(text)}
+                onEndEditing={Keyboard.dismiss}
+              />
+              <MenuItem>
+                <MenuText>Size</MenuText>
+                <FontSizeSlider
+                  value={50}
+                  minimumValue={5}
+                  maximumValue={500}
+                  step={1}
+                  minimumTrackTintColor='#000000'
+                  maximumTrackTintColor='#FFFFFF'
+                  thumbTintColor='#1e1e1e'
+                  onValueChange={(fontSize) => this.changingFont(fontSize)}
+                />
+              </MenuItem>
+              <MenuItem>
+                <MenuText>Speed</MenuText>
+                <FontSizeSlider
+                  value={0.2}
+                  minimumValue={0.05}
+                  maximumValue={1}
+                  step={0.05}
+                  minimumTrackTintColor='#000000'
+                  maximumTrackTintColor='#FFFFFF'
+                  thumbTintColor='#1e1e1e'
+                  onValueChange={(textSpeed) => this.changingSpeed(textSpeed)}
+                />
+              </MenuItem>
+
+              <AnimatedColorPickerContainer
+                style={{
+                  height: this.state.ColorPickerContainerHeight,
+                }}
+              >
+                <MenuText>Color</MenuText>
+                <ControlledTriangle />
+              </AnimatedColorPickerContainer>
+              <MenuItem>
+                <MenuText>Direction</MenuText>
+                <DirectionButton />
+              </MenuItem>
+            </Content>
+          </TwoColumnContainer>
         </AnimatedContainer>
       </TransparentContainer>
     );
@@ -423,7 +471,6 @@ const TransparentContainer = styled.View`
   bottom: 0;
   height: 100%;
   width: 100%;
-  opacity: 1;
   align-items: center;
 `;
 
@@ -460,18 +507,23 @@ const Subtitle = styled.Text`
 `;
 
 const Content = styled.View`
+  flex-direction: column;
   height: ${screenHeight - 142}px;
   background: #f0f3f5;
   padding: 10%;
+  width: 100%;
 `;
-
-const CloseView = styled.View`
+//链接按钮
+const LinkIconView = styled.View`
   width: 44px;
   height: 44px;
   border-radius: 22px;
   background: white;
   align-items: center;
   justify-content: center;
+  left: 50%;
+  margin-left: -22px;
+  z-index: 11;
 `;
 
 const TextToShot = styled.TextInput`
@@ -511,9 +563,15 @@ const ColorPickerContainer = styled.View`
   justify-content: space-between;
 `;
 
+const TwoColumnContainer = styled.View`
+  flex-direction: row;
+`;
+const LinkMenuContainer = styled.View``;
+
 const AnimatedColorPickerContainer = Animated.createAnimatedComponent(
   ColorPickerContainer
 );
-const AnimatedCloseView = Animated.createAnimatedComponent(CloseView);
+const AnimatedIconView = Animated.createAnimatedComponent(LinkIconView);
 const AnimatedContainer = Animated.createAnimatedComponent(Container);
 const AnimatedIconContainer = Animated.createAnimatedComponent(IconWrap);
+const AnimatedLinkMenu = Animated.createAnimatedComponent(LinkMenuContainer);
