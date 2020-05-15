@@ -47,10 +47,7 @@ class ControlledTriangle extends React.Component {
 
   onColorChange(color) {
     this.setState({ color });
-  }
-
-  colorChanged({ h, s, v }) {
-    console.log(h, s, v);
+    this.props.updateColor(color);
   }
 
   //更新颜色并关闭颜色拾取器
@@ -103,3 +100,10 @@ class ControlledTriangle extends React.Component {
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(ControlledTriangle);
+
+/**
+ *  
+ 
+ * 原驻选择器
+ * 
+ */

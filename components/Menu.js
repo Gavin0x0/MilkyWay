@@ -152,6 +152,9 @@ class Menu extends React.Component {
           useNativeDriver: true,
         }),
       ]).start();
+    } else if (this.props.isPickerOpen) {
+      //触摸其他地方关闭拾取器
+      this.props.closePicker();
     }
   };
   //手势滑动反馈
@@ -369,6 +372,7 @@ class Menu extends React.Component {
             <MenuItem>
               <MenuText>Size</MenuText>
               <FontSizeSlider
+                value={50}
                 minimumValue={5}
                 maximumValue={500}
                 step={1}
@@ -381,6 +385,7 @@ class Menu extends React.Component {
             <MenuItem>
               <MenuText>Speed</MenuText>
               <FontSizeSlider
+                value={0.2}
                 minimumValue={0.05}
                 maximumValue={1}
                 step={0.05}

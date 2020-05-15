@@ -1,6 +1,14 @@
 import React from "react";
 import styled from "styled-components";
-import { View, Animated, Dimensions, Text, Button, Easing } from "react-native";
+import {
+  View,
+  Animated,
+  Dimensions,
+  Text,
+  Button,
+  Easing,
+  PixelRatio,
+} from "react-native";
 import { connect } from "react-redux";
 import { EasyLoading, Loading } from "../components/LoadFinish";
 import { fromHsv } from "react-native-color-picker";
@@ -93,7 +101,7 @@ class TextWay extends React.Component {
             onLayout={({ nativeEvent: e }) => this.layout(e)}
             style={{
               transform: [{ translateX: this.state.x }],
-              fontSize: this.props.fontSize,
+              fontSize: this.props.fontSize / PixelRatio.getFontScale(),
               fontWeight: this.props.fontWeight,
               fontFamily: "Ali-Bold",
               color: fromHsv(this.props.textColor),
@@ -103,7 +111,7 @@ class TextWay extends React.Component {
           </AnimatedText>
         </TextWrap>
         <View style={{ top: 100 }}>
-          <DebugText>动作:{this.props.action}</DebugText>
+          <DebugText>字体大小的比例:{PixelRatio.getFontScale()}</DebugText>
           <DebugText>文字大小:{this.props.fontSize}</DebugText>
           <DebugText>文字粗细:{this.props.fontWeight}</DebugText>
           <DebugText>文本速度:{this.props.textSpeed}</DebugText>
