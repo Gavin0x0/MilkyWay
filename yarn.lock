@@ -2510,9 +2510,9 @@ expo-three@^5.4.0:
     expo-asset-utils "^1.2.0"
 
 expo-web-browser@~8.2.1:
-  version "8.2.0"
-  resolved "https://registry.npm.taobao.org/expo-web-browser/download/expo-web-browser-8.2.0.tgz#18f14fef54bb20e723760083689bc0aef130bb23"
-  integrity sha1-GPFP71S7IOcjdgCDaJvArvEwuyM=
+  version "8.2.1"
+  resolved "https://registry.yarnpkg.com/expo-web-browser/-/expo-web-browser-8.2.1.tgz#993ba53371862ed85cfd277ba59a7004ed412905"
+  integrity sha512-cENMuq6nhHRdJlEt0Fk1cPDK5aid8+znJeO6rFoIs7+PokMKtcVYBpzQI/TJlxRP3pjMm0qOISnLlMbDlZ+bfg==
   dependencies:
     compare-urls "^2.0.0"
 
@@ -5345,10 +5345,10 @@ text-encoding@^0.7.0:
   resolved "https://registry.npm.taobao.org/text-encoding/download/text-encoding-0.7.0.tgz#f895e836e45990624086601798ea98e8f36ee643"
   integrity sha1-+JXoNuRZkGJAhmAXmOqY6PNu5kM=
 
-three@^0.116.1:
-  version "0.116.1"
-  resolved "https://registry.npm.taobao.org/three/download/three-0.116.1.tgz?cache=0&sync_timestamp=1588368322939&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fthree%2Fdownload%2Fthree-0.116.1.tgz#a393f7a81fdc3e2fbf57ded5ba47dc5bd3678ce0"
-  integrity sha1-o5P3qB/cPi+/V97VukfcW9NnjOA=
+three@^0.137.0:
+  version "0.137.0"
+  resolved "https://registry.yarnpkg.com/three/-/three-0.137.0.tgz#0ebd6ba66637a332c31f234bcdd35aeec071a6e3"
+  integrity sha512-rzSDhia6cU35UCy6y+zEEws6vSgytfHqFMSaBvUcySgzwvDO6vETyswtSNi/+aVqJw8WLMwyT1mlQQ1T/dxxOA==
 
 throat@^4.1.0:
   version "4.1.0"
